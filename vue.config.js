@@ -1,0 +1,25 @@
+module.exports = {
+    devServer:{
+        open:true,
+        port:8899,
+        //设置代理
+        proxy:{
+            'api':{
+                target:'https://www.baidu.com',
+                ws:true,
+                changeOrigin:true
+            }
+        }
+    },
+    configureWebpack:{
+        resolve:{
+            alias:{
+                'assets':'@/assets',
+                "components":'@/components',
+                "views":'@/views',
+                "network":'@/network',
+                "constant":'@/constant',
+            }
+        }
+    }
+}
