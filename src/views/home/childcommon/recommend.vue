@@ -27,6 +27,7 @@ export default {
   padding:10px 0 20px 0;
   font-size:14px;
   text-align: center;
+  border-bottom:8px solid #f2f2f2;
 }
 img{
   width:80px;
