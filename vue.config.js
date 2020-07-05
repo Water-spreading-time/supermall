@@ -4,10 +4,13 @@ module.exports = {
         port:8899,
         //设置代理
         proxy:{
-            'api':{
-                target:'https://www.baidu.com',
-                ws:true,
-                changeOrigin:true
+            '/api':{
+                target:'http://152.136.185.210:8000/api/n3',
+                // ws:true,
+                changeOrigin:true,
+                pathRewrite:{
+                    '^/api': ''
+                }
             }
         }
     },
