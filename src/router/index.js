@@ -15,7 +15,7 @@ const Home = () => import('@/views/home/Home')
 const Classify = () => import('@/views/classify/classify')
 const Cart = () => import('@/views/cart/cart')
 const Profile = () => import('@/views/profile/profile')
-const Detail = () => import('@/views/home/childcommon/detail')
+const Detail = () => import('@/views/detail/detail')
 
 
 Vue.use(VueRouter)
