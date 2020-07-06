@@ -1,11 +1,12 @@
 <template>
   <div id="home">
     <top-nav-bar></top-nav-bar>
-    <scroll ref="scroll" @roll="roll">
-      <home-swiper :banners="banners"></home-swiper>
+    <child-nav :navList="navList" @cut="goodsCut" ref="childNav1" class="rel" v-show="isShowChildNav"></child-nav>
+    <scroll ref="scroll" @roll="roll" @loadMore="loadMore">
+      <home-swiper :banners="banners" @swiperImgLoad="swiperImgLoad"></home-swiper>
       <recommend :recommentd="recommend"></recommend>
       <fashion></fashion>
-      <child-nav :navList="navList" @cut="goodsCut" ref="childNav"></child-nav>
+      <child-nav :navList="navList" @cut="goodsCut" ref="childNav2" v-show="!isShowChildNav"></child-nav>
       <goods :goodsList="goodsList"></goods>
     </scroll>
     <back-top @click.native="rollBackTop" v-show="isShowBacktop"></back-top>
@@ -24,6 +25,8 @@ import BackTop from 'components/context/backTop/BackTop'
 
 import {getHomeData,getHomeList} from 'network/home'
 
+import {Bus} from 'bus'
+
 export default {
   components:{HomeSwiper,TopNavBar,recommend,fashion,ChildNav,Goods,Scroll,BackTop},
   data(){
@@ -41,7 +44,9 @@ export default {
         {title:'新款',keys:'new'},
         {title:'精选',keys:'sell'}
       ],
-      isShowBacktop:false
+      isShowBacktop:false,
+      isShowChildNav:false,
+      childNavOffsetTop:0
     }
   },
   created(){
@@ -51,7 +56,10 @@ export default {
     this.getProList('sell')
   },
   mounted(){
-    console.log(this.$refs.childNav.$el.offsetTop)
+    const refresh = this.antiShake(this.$refs.scroll.refresh,50)
+    Bus.$on('imgLoad',() => {
+      refresh()
+    })
   },
   computed:{
     goodsList(){
@@ -59,6 +67,16 @@ export default {
     }
   },
   methods:{
+    //防抖函数
+    antiShake(func,dely){
+      let timer = null
+      return (...args) => {
+        if(timer) clearTimeout(timer)
+        timer = setTimeout(() => {
+          func.apply(this,args)
+        },dely)
+      }
+    },
     //获取轮播图数据
     getHomeData(){
       getHomeData().then(datas => {
@@ -68,13 +86,26 @@ export default {
     },
     //获取产品列表数据
     getProList(type){
-      const page = this.goods[type].page
-      getHomeList(type,1).then(datas => {
+      const page = this.goods[type].page + 1
+      getHomeList(type,page).then(datas => {
         this.goods[type].list.push(...datas.list)
-        this.goods[type].page + 1
+        this.goods[type].page += 1
+        this.$refs.scroll.refresh()
+        // this.$refs.scroll.afterUpload()
       })
     },
-    goodsCut(e){
+    //加载更多
+    loadMore(){
+      this.getProList(this.goodsIndex)
+    },
+    //轮播图加载完成
+    swiperImgLoad(){
+      this.childNavOffsetTop = this.$refs.childNav2.$el.offsetTop - 44
+    },
+    //产品分类切换
+    goodsCut(e,index){
+      this.$refs.childNav2.indexType = index
+      this.$refs.childNav1.indexType = index
       this.goodsIndex = e
     },
     //滚回顶部
@@ -84,6 +115,7 @@ export default {
     //监听滚动
     roll(pos){
       this.isShowBacktop = -pos.y > 1000
+      this.isShowChildNav = -pos.y > this.childNavOffsetTop
     }
   }
 }

@@ -22,6 +22,7 @@ module.exports = {
                 "views":'@/views',
                 "network":'@/network',
                 "constant":'@/constant',
+                "bus":"@/bus"
             }
         }
     }

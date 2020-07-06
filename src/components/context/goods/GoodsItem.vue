@@ -1,15 +1,17 @@
 <template>
-  <div class="goodsItem">
-    <a :href="goods.link">
-      <img :src="goods.show.img" alt="">
+  <div class="goodsItem" @click="jumpDetail">
+    <!-- <a :href="goods.link"> -->
+      <img :src="goods.show.img" alt="" @load="imgLoad">
       <div class="goodsInfo">
         <p class="title">{{goods.title}}</p>
         <p><span class="price">{{goods.price}}</span><span class="collect">{{goods.cfav}}</span></p>
       </div>
-    </a>
+    <!-- </a> -->
   </div>
 </template>
 <script>
+import {Bus} from 'bus'
+
 export default {
   props:{
     goods:{
@@ -21,6 +23,14 @@ export default {
   },
   data(){
     return {
+    }
+  },
+  methods:{
+    imgLoad(){
+      Bus.$emit('imgLoad')
+    },
+    jumpDetail(){
+      this.$router.push({path:`/detail/${this.goods.iid}`})
     }
   }
 }

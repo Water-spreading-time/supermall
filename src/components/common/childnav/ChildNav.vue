@@ -28,8 +28,8 @@ export default {
   },
   methods:{
     cut(keys,index){
-      this.indexType = index
-      this.$emit('cut',keys)
+      // this.indexType = index
+      this.$emit('cut',keys,index)
     }
   },
   computed:{
@@ -41,8 +41,8 @@ export default {
 </script>
 <style lang='less' scoped>
 .childnav{
-  position: sticky;
-  top:44px;
+  // position: sticky;
+  // top:44px;
   text-align: center;
   height:40px;
   line-height: 40px;
