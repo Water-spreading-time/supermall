@@ -61,6 +61,12 @@ export default {
       refresh()
     })
   },
+  activated(){
+
+  },
+  deactivated(){
+    console.log(this.$refs.scroll)
+  },
   computed:{
     goodsList(){
       return this.goods[this.goodsIndex].list

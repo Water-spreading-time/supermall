@@ -16,33 +16,33 @@
       }
     },
     data(){
-        return {
+      return {
 
-        }
+      }
     },
     methods:{
-        toggleTab(){
-            this.$router.replace(this.path)
-        }
+      toggleTab(){
+        this.$router.replace(this.path)
+      }
     },
     computed: {
-        isActive(){
-            return this.$route.path.indexOf(this.path) != -1
-        },
-        activeStyle(){
-            return this.isActive ? {color:this.activeColor} : {}
-        }
+      isActive(){
+          return this.$route.path.indexOf(this.path) != -1
+      },
+      activeStyle(){
+          return this.isActive ? {color:this.activeColor} : {}
+      }
     }
   }
 </script>
 
 <style lang="less" scoped>
 .tabbar-item{
-    flex:1;
-    font-size:12px;
-    img{
-        width:30px;
-        height:30px;
-    }
+  flex:1;
+  font-size:12px;
+  img{
+      width:30px;
+      height:30px;
+  }
 }
 </style>
