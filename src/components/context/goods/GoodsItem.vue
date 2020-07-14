@@ -30,7 +30,7 @@ export default {
       Bus.$emit('imgLoad')
     },
     jumpDetail(){
-      this.$router.push({path:`/detail/${this.goods.iid}`})
+      this.$router.push({path:`/detail`,query:{iid:this.goods.iid}})
     }
   }
 }
