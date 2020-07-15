@@ -2,7 +2,10 @@
   <div id="home">
     <top-nav-bar></top-nav-bar>
     <child-nav :navList="navList" @cut="goodsCut" ref="childNav1" class="rel" v-show="isShowChildNav"></child-nav>
-    <scroll ref="scroll" @roll="roll" @loadMore="loadMore">
+    <scroll ref="scroll" :probeType="3" :pullUpLoad="true"
+            @scroll="roll"
+            @pullingUp="loadMore"
+            :data="goodsList">
       <home-swiper :banners="banners" @swiperImgLoad="swiperImgLoad"></home-swiper>
       <recommend :recommentd="recommend"></recommend>
       <fashion></fashion>
@@ -28,6 +31,7 @@ import {getHomeData,getHomeList} from 'network/home'
 import {Bus} from 'bus'
 
 export default {
+  name:'Home',
   components:{HomeSwiper,TopNavBar,recommend,fashion,ChildNav,Goods,Scroll,BackTop},
   data(){
     return {
@@ -62,10 +66,10 @@ export default {
     })
   },
   activated(){
-
+    console.log('进入')
   },
   deactivated(){
-    console.log(this.$refs.scroll)
+    console.log('离开')
   },
   computed:{
     goodsList(){
@@ -97,7 +101,7 @@ export default {
         this.goods[type].list.push(...datas.list)
         this.goods[type].page += 1
         this.$refs.scroll.refresh()
-        // this.$refs.scroll.afterUpload()
+        this.$refs.scroll.finishPullUp()
       })
     },
     //加载更多
@@ -116,7 +120,7 @@ export default {
     },
     //滚回顶部
     rollBackTop(){
-      this.$refs.scroll.backtop()
+      this.$refs.scroll.scrollTo(0,0,300)
     },
     //监听滚动
     roll(pos){
@@ -129,6 +133,6 @@ export default {
 <style lang='less' scoped>
 #home{
   padding-top:44px;
-  padding-bottom:100px;
+  padding-bottom:144px;
 }
 </style>

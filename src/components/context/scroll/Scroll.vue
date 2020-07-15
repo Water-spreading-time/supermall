@@ -1,69 +1,80 @@
 <template>
-  <div class="scroll">
-    <BScroll ref="BScroll" :attr="attr" :func="func" @pullingUp="listenPullingUp" @pullingDown="listenPullingDown" @scroll="scroll">
+  <div ref="wrapper" class="wrapper">
+    <div>
       <slot></slot>
-    </BScroll>
-    <!-- <vue-better-scroll>
-      <slot></slot>
-    </vue-better-scroll> -->
+    </div>
   </div>
 </template>
 
 <script>
-import BScroll from 'vue-bscroll'
-import {VueBetterScroll} from 'vue2-better-scroll'
+  import BScroll from 'better-scroll'
 
-export default {
-  name:"scroll",
-  components:{
-    BScroll,
-    VueBetterScroll
-  },
-  data(){
-    return {
-      attr:{
-        click:true,
-        probeType:3,
-        pullDownRefresh:{
-          top:50
+	export default {
+    props: {
+		  probeType: {
+		    type: Number,
+        default: 1
+      },
+      data: {
+		    type: Array,
+        default: () => {
+          return []
         }
       },
-      func: {
-        // 监听滚动
-        listenScroll: true,
-        // 监听下拉刷新
-        listenPullingDown: true,
-        // 监听上拉加载
-        listenPullingUp: true
+      pullUpLoad: {
+		    type: Boolean,
+        default: false
+      }
+    },
+    data() {
+		  return {
+		    scroll: {}
+      }
+    },
+    mounted() {
+      setTimeout(this.__initScroll, 20)
+    },
+    methods: {
+		  __initScroll() {
+		    // 1.初始化BScroll对象
+		    if (!this.$refs.wrapper) return
+        this.scroll = new BScroll(this.$refs.wrapper, {
+          probeType: this.probeType,
+          click: true,
+          pullUpLoad: this.pullUpLoad
+        })
+
+        // 2.将监听事件回调
+        this.scroll.on('scroll', pos => {
+          this.$emit('scroll', pos)
+        })
+
+        // 3.监听上拉到底部
+        this.scroll.on('pullingUp', () => {
+          console.log('上拉加载');
+          this.$emit('pullingUp')
+        })
+      },
+      refresh() {
+        this.scroll && this.scroll.refresh && this.scroll.refresh()
+      },
+      finishPullUp() {
+		    this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp()
+      },
+      scrollTo(x, y, time) {
+		    this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time)
+      }
+    },
+    watch: {
+		  data() {
+        setTimeout(this.refresh, 20)
       }
     }
-  },
-  methods:{
-    listenPullingUp(){
-      this.$emit('loadMore')
-    },
-    listenPullingDown(){
-      console.log('下拉刷新')
-      setTimeout(() => this.$refs.BScroll.afterRefresh(),1000)
-    },
-    scroll(pos){
-      this.$emit('roll',pos)
-    },
-    backtop(){
-      this.$refs.BScroll && this.$refs.BScroll.scrollTo(0,0,300)
-    },
-    refresh(){
-      this.$refs.BScroll && this.$refs.BScroll.refresh()
-    },
-    afterUpload(){
-      this.$refs.BScroll && this.$refs.BScroll.afterUpload(true)
-    }
-  }
-}
+	}
 </script>
 
 <style scoped>
-.scroll{
+.wrapper{
   height:calc(100vh - 93px);
 }
 </style>

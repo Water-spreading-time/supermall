@@ -16,11 +16,7 @@ const Classify = () => import('@/views/classify/classify')
 const Cart = () => import('@/views/cart/cart')
 const Profile = () => import('@/views/profile/profile')
 
-const Detail = () => import('@/views/detail/detail')
-const Shop = () => import('@/views/detail/childcommon/Shop')
-const Conment = () => import('@/views/detail/childcommon/Conment')
-const Parameter = () => import('@/views/detail/childcommon/Parameter')
-const Recommend = () => import('@/views/detail/childcommon/Recommend')
+const Detail = () => import('@/views/detail/Detail')
 
 Vue.use(VueRouter)
 
@@ -48,28 +44,6 @@ const routes = [
   {
     path:'/detail',
     component:Detail,
-    children:[
-      {
-        path:'/',
-        redirect:'shop',
-      },
-      {
-        path:'shop',
-        component: Shop
-      },
-      {
-        path:'conment',
-        component: Conment
-      },
-      {
-        path:'parameter',
-        component: Parameter
-      },
-      {
-        path:'recommend',
-        component: Recommend
-      },
-    ]
   },
 ]
 

@@ -3,8 +3,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueLazyLoad from 'vue-lazyload'
+import Faskclick from 'fastclick'
 
 Vue.config.productionTip = false
+
+//解决移动端点击事件300ms延迟
+Faskclick.attach(document.body)
 
 //图片懒加载
 Vue.use(VueLazyLoad,{

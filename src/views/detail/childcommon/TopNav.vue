@@ -26,17 +26,12 @@ export default {
       activeIndex:0
     }
   },
-  deactivated(){
-    this.activeIndex = 0
-  },
   methods:{
     back(){
-      this.$router.push('/home')
+      this.$router.back()
     },
     toggleModule(e){
       this.activeIndex = e
-      const path = e == 0 ? 'shop' : e == 1 ? 'Parameter' : e == 2 ? 'Conment' : 'Recommend'
-      this.$router.push(path)
     }
   }
 }
