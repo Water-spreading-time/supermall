@@ -1,6 +1,6 @@
 <template>
   <div class="goodsList flx">
-    <goods-item v-for="(item,index) in goodsList" :key="item.ptpC + index" :goods="item"></goods-item>
+    <goods-item v-for="(item,index) in goodsList" :key="item.price + index" :goods="item"></goods-item>
   </div>
 </template>
 <script>

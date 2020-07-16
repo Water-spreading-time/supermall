@@ -24,15 +24,17 @@ import fashion from './childcommon/fashion'
 import ChildNav from 'components/common/childnav/ChildNav'
 import Goods from 'components/context/goods/Goods'
 import Scroll from 'components/context/scroll/Scroll'
-import BackTop from 'components/context/backTop/BackTop'
 
 import {getHomeData,getHomeList} from 'network/home'
 
 import {Bus} from 'bus'
 
+import {BackTopMixin} from 'constant/mixin'
+
 export default {
   name:'Home',
-  components:{HomeSwiper,TopNavBar,recommend,fashion,ChildNav,Goods,Scroll,BackTop},
+  components:{HomeSwiper,TopNavBar,recommend,fashion,ChildNav,Goods,Scroll},
+  mixins:[BackTopMixin],
   data(){
     return {
       banners:[],
@@ -48,7 +50,6 @@ export default {
         {title:'新款',keys:'new'},
         {title:'精选',keys:'sell'}
       ],
-      isShowBacktop:false,
       isShowChildNav:false,
       childNavOffsetTop:0
     }
@@ -66,10 +67,11 @@ export default {
     })
   },
   activated(){
-    console.log('进入')
+    console.log(this.posiY)
+    this.$refs.scroll.scrollTo(0,this.posiY,0)
   },
   deactivated(){
-    console.log('离开')
+    this.posiY = this.$refs.scroll.scroll.y
   },
   computed:{
     goodsList(){
@@ -117,10 +119,6 @@ export default {
       this.$refs.childNav2.indexType = index
       this.$refs.childNav1.indexType = index
       this.goodsIndex = e
-    },
-    //滚回顶部
-    rollBackTop(){
-      this.$refs.scroll.scrollTo(0,0,300)
     },
     //监听滚动
     roll(pos){
