@@ -71,7 +71,7 @@ export default {
     this.$refs.scroll.scrollTo(0,this.posiY,0)
   },
   deactivated(){
-    this.posiY = this.$refs.scroll.scroll.y
+    this.posiY = -this.$refs.scroll.scroll.startY
   },
   computed:{
     goodsList(){

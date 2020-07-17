@@ -20,18 +20,25 @@ import NavBarItem from 'components/common/navbar/NavBarItem'
 
 export default {
   components:{NavBar,NavBarItem},
+  props:{
+    activeIndex:{
+      type:Number,
+      default(){
+        return 0
+      }
+    }
+  },
   data(){
     return {
-      navList:['商品','参数','评论','推荐'],
-      activeIndex:0
+      navList:['商品','参数','评论','推荐']
     }
   },
   methods:{
     back(){
       this.$router.back()
     },
-    toggleModule(e){
-      this.activeIndex = e
+    toggleModule(index){
+      this.$emit('jump',index)
     }
   }
 }

@@ -1,14 +1,14 @@
 <template>
   <div class="details">
-    <top-nav/>
+    <top-nav @jump='jump' :activeIndex="activeIndex"/>
     <scroll :probeType='3' class="contents" @scroll="roll" ref="scroll">
-      <detail-swiper :banners="BannerList" ref="hSwiper"></detail-swiper>
+      <detail-swiper :banners="BannerList" ref="base"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
       <detail-goods-info :detailInfo="detailInfo"></detail-goods-info>
-      <detail-parma-info :paramInfo="paramInfo"></detail-parma-info>
-      <detail-comment-info :commentInfo="commentInfo"></detail-comment-info>
-      <detail-recommend-info :recommendList="recommendList"></detail-recommend-info>
+      <detail-parma-info ref="param" :paramInfo="paramInfo"></detail-parma-info>
+      <detail-comment-info ref="comment" :commentInfo="commentInfo"></detail-comment-info>
+      <detail-recommend-info ref="recommend" :recommendList="recommendList"></detail-recommend-info>
     </scroll>
     <detail-nav-bar @addCart="addCart"/>
     <back-top @click.native="rollBackTop" v-show="isShowBacktop"/>
@@ -55,8 +55,15 @@ export default {
       detailInfo:{},
       paramInfo:{},
       commentInfo:{},
-      recommendList:[]
+      recommendList:[],
+      themeTops:[],
+      activeIndex:0
     }
+  },
+  updated(){
+    this.$nextTick(() => {
+      this._getOffsetTops()
+    })
   },
   created(){
     this.id = this.$route.query.iid
@@ -64,6 +71,35 @@ export default {
     this.getRecomend()
   },
   methods:{
+    _getOffsetTops() {
+      this.themeTops = []
+      this.themeTops.push(this.$refs.base.$el.offsetTop)
+      this.themeTops.push(this.$refs.param.$el.offsetTop)
+      this.themeTops.push(this.$refs.comment.$el.offsetTop)
+      this.themeTops.push(this.$refs.recommend.$el.offsetTop)
+      this.themeTops.push(Number.MAX_VALUE)
+    },
+    _listenScrollTheme(position) {
+      let length = this.themeTops.length;
+      for (let i = 0; i < length; i++) {
+        let iPos = this.themeTops[i];
+        if (position >= iPos && position < this.themeTops[i+1]) {
+          if (this.activeIndex !== i) {
+            this.activeIndex = i;
+          }
+          break;
+        }
+      }
+    },
+    addToCart() {
+      const obj = {}
+      obj.iid = this.iid;
+      obj.imgURL = this.topImages[0]
+      obj.title = this.goods.title
+      obj.desc = this.goods.desc;
+      obj.newPrice = this.goods.nowPrice;
+      this.$store.commit('addCart', obj)
+    },
     //商品详情信息
     getdetails(){
       GetDetail(this.id).then(res => {
@@ -92,6 +128,11 @@ export default {
     },
     roll(pos){
       this.isShowBacktop = -pos.y > 1000
+      this._listenScrollTheme(-pos.y)
+    },
+    jump(index){
+      this.activeIndex = index
+      this.$refs.scroll.scrollTo(0,-this.themeTops[index],300)
     },
     addCart(){
       console.log('加入购物车失败...')

@@ -25,6 +25,7 @@ body {
   color: var(--color-text);
   /* rem vw/vh */
   width: 100vw;
+  touch-action: none;
 }
 
 a {
@@ -65,3 +66,5 @@ div{
 .fxe{
   position: fixed;
 }
+
+ 
